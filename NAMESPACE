@@ -3,5 +3,6 @@
 export(reduce)
 export(relm)
 export(sum)
+importFrom(httpuv,service)
 importFrom(httpuv,startServer)
 importFrom(httpuv,stopServer)

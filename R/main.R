@@ -1,7 +1,7 @@
 
 
 
-#' @importFrom httpuv startServer stopServer
+#' @importFrom httpuv startServer stopServer service
 #' @export
 `relm` <- function (model) 
 {
