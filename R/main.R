@@ -1,0 +1,64 @@
+#' @importFrom httpuv startServer stopServer
+#' @export
+`relm` <- function (model) 
+{
+	page <- paste(readLines("index.html"), collapse = "\n")
+
+	# Application httpuv qui gère à la fois les requêtes HTTP et les WebSockets
+	app <- list(
+	  # Quand quelqu'un accède à http://localhost:3000/, on renvoie la page HTML
+	  call = function(req) {
+		if (req$PATH_INFO == "/" || req$PATH_INFO == "") {
+		  list(
+			status = 200L,
+			headers = list("Content-Type" = "text/html"),
+			body = page
+		  )
+		} else {
+		  list(status = 404L, body = "Not found")
+		}
+	  },
+
+	  # Gestion du WebSocket
+	  onWSOpen = function(ws) {
+		# Compteur propre à chaque connexion (closure)
+
+		ws$onMessage(function(binary, message) {
+		  if (!binary) {
+			model <<- update(model, message)
+			ws$send(view(model))
+		  }
+		})
+
+		# Optionnel : envoyer le texte initial dès la connexion
+		ws$send(view(model))
+	  }
+	)
+
+	# Démarrage du serveur sur le port 3000
+	s <- startServer("127.0.0.1", 3000, app)
+
+	cat("Serveur démarré ! Ouvre ton navigateur sur http://localhost:3000\n")
+	cat("Pour arrêter le serveur : s$stop()\n")
+
+	# Garde le script en vie jusqu'à Ctrl+C
+	# Fonction pour nettoyer à l'arrêt
+	onStop <- function() {
+	  cat("\nArrêt du serveur...\n")
+	  stopServer(serveur)
+	  cat("Serveur arrêté.\n")
+	}
+
+	# Capturer l'interruption (Ctrl+C)
+	tryCatch({
+	  # Garder le script actif
+	  while(TRUE) {
+		service()
+		Sys.sleep(0.1)  # Éviter une boucle trop intensive
+	  }
+	}, interrupt = function(e) {
+	  onStop()
+	})
+}
+
+
