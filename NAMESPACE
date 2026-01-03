@@ -2,6 +2,7 @@
 
 export(reduce)
 export(relm)
+export(send_msg)
 export(sum)
 importFrom(httpuv,service)
 importFrom(httpuv,startServer)

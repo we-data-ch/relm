@@ -66,3 +66,9 @@
 }
 
 
+`send_msg` <- function (msg) 
+{
+	paste0("onclick=\"to_r('", msg, "')\"")
+}
+
+
