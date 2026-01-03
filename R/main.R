@@ -1,8 +1,12 @@
+
+
+
 #' @importFrom httpuv startServer stopServer
 #' @export
 `relm` <- function (model) 
 {
-	page <- paste(readLines("index.html"), collapse = "\n")
+	index_path <- system.file("www", "index.html", package = "relm")
+	page <- paste(readLines(index_path), collapse = "\n")
 
 	# Application httpuv qui gère à la fois les requêtes HTTP et les WebSockets
 	app <- list(

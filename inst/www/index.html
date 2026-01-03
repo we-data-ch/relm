@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Exemple R + WebSocket</title>
+  <style>
+    button { font-size: 24px; padding: 20px 40px; }
+    h1 { font-size: 24px; padding: 20px 40px; }
+	div.parent {
+  display: flex;
+  flex-direction: row; /* par défaut, donc optionnel */
+  align-items: center; /* optionnel : aligne verticalement les enfants */
+  gap: 10px; /* optionnel : espace entre les enfants */
+}
+  </style>
+</head>
+<body>
+
+</body>
+  <script>
+	// Créer un parseur HTML
+
+
+    // Connexion WebSocket sur le même port que le serveur HTTP
+    const ws = new WebSocket("ws://" + location.host);
+
+    ws.onopen = () => {
+      console.log("WebSocket connecté");
+      // Optionnel : on peut demander l'état initial ici si on veut
+    };
+
+    ws.onmessage = (event) => {
+		const parser = new DOMParser();
+		//const fabhtml = "<h1>Hello World</h1>";
+		console.log(event.data);
+		// Parser une chaîne HTML
+		const doc = parser.parseFromString(event.data, 'text/html');
+
+		// Vider le body
+		document.body.replaceChildren();
+
+		// Utiliser les éléments
+		document.body.appendChild(doc.body.firstElementChild);
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket fermé");
+    };
+
+	to_r = (message) => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(message);
+      }
+	}
+  </script>
+</html>
