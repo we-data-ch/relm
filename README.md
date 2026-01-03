@@ -8,7 +8,7 @@ You can install the development version from GitHub:
 
 ```r
 # install.packages("devtools")
-devtools::install_github("your-username/relm")
+devtools::install_github("we-data-ch/relm")
 ```
 
 ## Usage
@@ -17,6 +17,8 @@ devtools::install_github("your-username/relm")
 library(relm)
 
 # Your functions will be available here
+relm(component)
+
 ```
 
 ## Development
